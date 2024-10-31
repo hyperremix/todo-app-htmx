@@ -1,0 +1,10 @@
+/app
+*.swp
+*.test
+*.out
+tmp
+assets/styles/main.css
+*_templ.go
+/todo-app-htmx
+.DS_Store
+.env

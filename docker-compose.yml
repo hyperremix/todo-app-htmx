@@ -1,0 +1,16 @@
+version: "3.3"
+services:
+  database:
+    image: postgres:16.1-alpine3.19
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: todo_app_htmx
+      POSTGRES_PASSWORD: todo_app_htmx
+      POSTGRES_DB: todo_app_htmx
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
+volumes:
+  database_data:
+    driver: local

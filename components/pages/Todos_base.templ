@@ -1,0 +1,15 @@
+package pages
+
+import (
+	"github.com/hyperremix/todo-app-htmx/components/partials"
+)
+
+templ TodosBase() {
+	<html lang="en">
+		@partials.Head()
+		<body class="bg-gray-900 text-white">
+			@partials.AppBar()
+			@partials.TodosPartial()
+		</body>
+	</html>
+}
