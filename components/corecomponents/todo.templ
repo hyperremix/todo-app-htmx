@@ -1,0 +1,14 @@
+package corecomponents
+
+import "github.com/hyperremix/todo-app-htmx/model"
+
+type TodoProps struct {
+    Todo model.Todo
+}
+
+templ Todo (props TodoProps) {
+    <div class="flex justify-between items-center gap-2">
+        <span class="text-lg">{ props.Todo.Title }</span>
+        <span class="text-sm">{ props.Todo.Description }</span>
+    </div>
+}
