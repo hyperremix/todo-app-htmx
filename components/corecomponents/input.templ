@@ -1,19 +1,22 @@
 package corecomponents
 
-import (
-    "strconv"
-)
+import "strconv"
 
 type InputProps struct {
-    Name string
-	Label   string
-    Placeholder string
-    IsRequired bool
+	Name        string
+	Label       string
+	Placeholder string
+	IsRequired  bool
+	Attributes  templ.Attributes
+	Type        string
+	Class       string
 }
 
 templ Input(props InputProps) {
-    <div>
-        <label for={props.Name} class="block mb-2 text-sm font-medium text-white">{props.Label}</label>
-        <input type="text" id={props.Name} name={props.Name} class="block border border-gray-300 rounded-lg w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 dark:focus:border-blue-500" placeholder={props.Placeholder} required={strconv.FormatBool(props.IsRequired)} />
-    </div>
+	<div class={ props.Class }>
+		if props.Label != "" {
+			<label for={ props.Name } class="block mb-2 text-sm font-medium text-white">{ props.Label }</label>
+		}
+		<input type={ props.Type } id={ props.Name } name={ props.Name } class="block border rounded-lg w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 dark:focus:border-blue-500" placeholder={ props.Placeholder } required={ strconv.FormatBool(props.IsRequired) } { props.Attributes... }/>
+	</div>
 }

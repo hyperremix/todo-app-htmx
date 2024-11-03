@@ -11,6 +11,25 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const getTodoById = `-- name: GetTodoById :one
+SELECT id, title, description, is_completed, created_at, updated_at, deleted_at FROM todos WHERE id = $1 LIMIT 1
+`
+
+func (q *Queries) GetTodoById(ctx context.Context, id int64) (Todo, error) {
+	row := q.db.QueryRow(ctx, getTodoById, id)
+	var i Todo
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Description,
+		&i.IsCompleted,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
 const insertTodo = `-- name: InsertTodo :one
 INSERT INTO
     todos (title, description, is_completed)

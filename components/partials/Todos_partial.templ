@@ -5,18 +5,14 @@ import (
 	"github.com/hyperremix/todo-app-htmx/model"
 )
 
-templ TodosPartial (todos []model.Todo) {
-	<div id="container" class="max-w-md mx-auto">
-		<form class="flex flex-row items-end gap-3">
-			@corecomponents.Input(corecomponents.InputProps{Name: "title", Label: "Title", Placeholder: "Title", IsRequired: true})
-			@corecomponents.Input(corecomponents.InputProps{Name: "description", Label: "Description", Placeholder: "Description", IsRequired: true})
-			@corecomponents.Button(corecomponents.ButtonProps{Label: "Add Todo", Variant: "filled", Attributes: templ.Attributes{ "hx-post": "/todos", "hx-swap": "afterbegin", "hx-target": "#todo-list" }})
-		</form>
+templ TodosPartial(todos []model.Todo) {
+	<div>
+		@TodoPartial(model.Todo{})
 		<h1 class="text-4xl mt-2 mb-4">Todos</h1>
 		<div class="flex flex-col gap-2" id="todo-list">
-		for _, todo := range todos {
-			@corecomponents.Todo(corecomponents.TodoProps{Todo: todo})
-		}
+			for _, todo := range todos {
+				@corecomponents.Todo(corecomponents.TodoProps{Todo: todo})
+			}
 		</div>
 	</div>
 }

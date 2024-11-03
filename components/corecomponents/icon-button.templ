@@ -1,0 +1,15 @@
+package corecomponents
+
+import "github.com/hyperremix/todo-app-htmx/components/icons"
+
+type IconButtonProps struct {
+    IconPath string
+    Variant string
+    Attributes templ.Attributes
+}
+
+templ IconButton(props IconButtonProps) {
+    <button class={ append([]string{"font-bold", "p-2", "rounded-full"}, variantClassesMap[props.Variant]...) } type="submit" { props.Attributes... }>
+        @icons.Pencil()
+    </button>
+}

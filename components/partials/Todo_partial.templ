@@ -1,0 +1,20 @@
+package partials
+
+import (
+	"fmt"
+	"github.com/hyperremix/todo-app-htmx/components/corecomponents"
+	"github.com/hyperremix/todo-app-htmx/model"
+)
+
+templ TodoPartial(todo model.Todo) {
+	<form class="flex flex-col items-stretch gap-3">
+		@corecomponents.Input(corecomponents.InputProps{Name: "id", Class: "hidden", Attributes: templ.Attributes{"value": fmt.Sprintf("%v", todo.ID)}})
+		@corecomponents.Input(corecomponents.InputProps{Name: "title", Placeholder: "Title", IsRequired: true, Attributes: templ.Attributes{"value": todo.Title}})
+		@corecomponents.TextArea(corecomponents.TextAreaProps{Name: "description", Placeholder: "Description", IsRequired: true, Rows: 10, Attributes: templ.Attributes{"value": todo.Description}})
+		if todo.ID != 0 {
+			@corecomponents.Button(corecomponents.ButtonProps{Label: "Update", Variant: "filled", Attributes: templ.Attributes{"hx-put": fmt.Sprintf("/todos/%v", todo.ID), "hx-swap": "innerHTML", "hx-target": "#main-container", "hx-push-url": "/"}})
+		} else {
+			@corecomponents.Button(corecomponents.ButtonProps{Label: "Create", Variant: "filled", Attributes: templ.Attributes{"hx-post": "/todos", "hx-swap": "innerHTML", "hx-target": "#main-container", "hx-push-url": "/"}})
+		}
+	</form>
+}

@@ -1,6 +1,9 @@
 -- name: ListTodos :many
 SELECT * FROM todos ORDER BY created_at DESC;
 
+-- name: GetTodoById :one
+SELECT * FROM todos WHERE id = $1 LIMIT 1;
+
 -- name: InsertTodo :one
 INSERT INTO
     todos (title, description, is_completed)

@@ -42,3 +42,12 @@ func MapTodoToInsert(todo model.Todo) db.InsertTodoParams {
 		IsCompleted: pgtype.Bool{Bool: todo.IsCompleted, Valid: true},
 	}
 }
+
+func MapTodoToUpdate(todo model.Todo) db.UpdateTodoParams {
+	return db.UpdateTodoParams{
+		ID:          todo.ID,
+		Title:       pgtype.Text{String: todo.Title, Valid: true},
+		Description: pgtype.Text{String: todo.Description, Valid: true},
+		IsCompleted: pgtype.Bool{Bool: todo.IsCompleted, Valid: true},
+	}
+}
