@@ -1,33 +1,33 @@
 package corecomponents
 
-import (
-	"fmt"
-	"github.com/hyperremix/todo-app-htmx/model"
-	"strings"
-)
+import "github.com/hyperremix/todo-app-htmx/model"
+
+// "strings"
 
 type TodoProps struct {
 	Todo model.Todo
 }
 
-var maxDescriptionLength = 50
-
+// var maxDescriptionLength = 50
 templ Todo(props TodoProps) {
-	<div class="flex justify-between items-center gap-2 cursor-pointer rounded-lg bg-slate-800 p-2" hx-trigger="click" hx-get={ fmt.Sprintf("/todos/%v", props.Todo.ID) } hx-swap="innerHTML" hx-target="#main-container" hx-push-url="true">
-		<span class="text-lg">
-			if props.Todo.Title == "" {
-				if props.Todo.Description == "" {
-					Empty
-				} else {
-					if len(props.Todo.Description) > maxDescriptionLength {
-						{ strings.TrimSpace(props.Todo.Description[:maxDescriptionLength]) }...
-					} else {
-						{ props.Todo.Description }
-					}
-				}
-			} else {
-				{ props.Todo.Title }
-			}
-		</span>
-	</div>
+	// <div x-data="modal">
+	// 	<div class="flex justify-between items-center gap-2 cursor-pointer rounded-lg bg-slate-800 p-2" @click="toggleModal">
+	// 		<span class="text-lg">
+	// 			if props.Todo.Title == "" {
+	// 				if props.Todo.Description == "" {
+	// 					Empty
+	// 				} else {
+	// 					if len(props.Todo.Description) > maxDescriptionLength {
+	// 						{ strings.TrimSpace(props.Todo.Description[:maxDescriptionLength]) }...
+	// 					} else {
+	// 						{ props.Todo.Description }
+	// 					}
+	// 				}
+	// 			} else {
+	// 				{ props.Todo.Title }
+	// 			}
+	// 		</span>
+	// 	</div>
+	// 	@Modal(ModalProps{Content: TodoForm(props.Todo)})
+	// </div>
 }

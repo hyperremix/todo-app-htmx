@@ -2,17 +2,21 @@ package partials
 
 import (
 	"github.com/hyperremix/todo-app-htmx/components/corecomponents"
+	"github.com/hyperremix/todo-app-htmx/components/icons"
 	"github.com/hyperremix/todo-app-htmx/model"
 )
 
-templ TodosPartial(todos []model.Todo) {
-	<div>
-		@TodoPartial(model.Todo{})
+templ TodosPartial(todos []model.Todo, todo model.Todo, isModalVisible bool) {
+	<div id="todos-container">
 		<h1 class="text-4xl mt-2 mb-4">Todos</h1>
-		<div class="flex flex-col gap-2" id="todo-list">
+		<div class="flex flex-col gap-2">
 			for _, todo := range todos {
-				@corecomponents.Todo(corecomponents.TodoProps{Todo: todo})
+				@TodoPartial(todo)
 			}
 		</div>
+		<div class="sticky bottom-0 p-4 flex justify-end">
+			@corecomponents.IconButton(corecomponents.IconButtonProps{Icon: icons.Plus(), Variant: "filled", Attributes: templ.Attributes{"hx-get": "?isCreateModalVisible=true", "hx-swap": "outerHTML", "hx-target": "#modal-container", "hx-trigger": "click", "hx-push-url": "true"}})
+		</div>
+		@corecomponents.Modal(corecomponents.ModalProps{Content: TodoForm(TodoFormProps{Todo: todo}), IsModalVisible: isModalVisible})
 	</div>
 }

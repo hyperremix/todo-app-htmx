@@ -16,6 +16,6 @@ templ TextArea(props TextAreaProps) {
 		if props.Label != "" {
 			<label for={ props.Name } class="block mb-2 text-sm font-medium text-white">{ props.Label }</label>
 		}
-		<textarea id={ props.Name } name={ props.Name } class="block border rounded-lg w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 dark:focus:border-blue-500" placeholder={ props.Placeholder } required={ strconv.FormatBool(props.IsRequired) } { props.Attributes... } rows={ strconv.Itoa(props.Rows) }></textarea>
+		<textarea id={ props.Name } name={ props.Name } class="block border rounded-lg w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 dark:focus:border-blue-500" placeholder={ props.Placeholder } required?={ props.IsRequired } { props.Attributes... } rows={ strconv.Itoa(props.Rows) }></textarea>
 	</div>
 }

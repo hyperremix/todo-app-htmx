@@ -1,0 +1,55 @@
+package partials
+
+import (
+	"fmt"
+	"github.com/hyperremix/todo-app-htmx/components/corecomponents"
+	"github.com/hyperremix/todo-app-htmx/components/icons"
+	"github.com/hyperremix/todo-app-htmx/model"
+	"reflect"
+)
+
+type TodoFormProps struct {
+	Todo model.Todo
+}
+
+func getFormAttributes(props TodoFormProps) templ.Attributes {
+	if props.Todo.ID != 0 {
+		return templ.Attributes{"hx-put": fmt.Sprintf("/%v", props.Todo.ID), "hx-swap": "outerHTML", "hx-target": "#todos-container", "hx-push-url": "/"}
+	}
+	return templ.Attributes{"hx-post": "/", "hx-swap": "outerHTML", "hx-target": "#todos-container", "hx-push-url": "true"}
+}
+
+func getButtonProps(props TodoFormProps) corecomponents.ButtonProps {
+	if props.Todo.ID != 0 {
+		return corecomponents.ButtonProps{Label: "Update", Variant: "filled"}
+	}
+	return corecomponents.ButtonProps{Label: "Create", Variant: "filled"}
+}
+
+func getInputAttributes(value interface{}) templ.Attributes {
+	if value == reflect.Zero(reflect.TypeOf(value)).Interface() {
+		return templ.Attributes{}
+	}
+	return templ.Attributes{"value": fmt.Sprintf("%v", value)}
+}
+
+templ TodoForm(props TodoFormProps) {
+	<div class="relative flex flex-col gap-4">
+		<div class="absolute top-0 right-0">
+			@corecomponents.IconButton(corecomponents.IconButtonProps{Icon: icons.Close(), Variant: "text", Attributes: templ.Attributes{"hx-get": "/", "hx-swap": "outerHTML", "hx-target": "#modal-container", "hx-trigger": "click", "hx-push-url": "true"}})
+		</div>
+		<h2 class="text-2xl">
+			if props.Todo.ID != 0 {
+				Update Todo
+			} else {
+				Create Todo
+			}
+		</h2>
+		<form class="flex flex-col items-stretch gap-3" { getFormAttributes(props)... }>
+			@corecomponents.Input(corecomponents.InputProps{Name: "id", Class: "hidden", Attributes: getInputAttributes(props.Todo.ID)})
+			@corecomponents.Input(corecomponents.InputProps{Name: "title", Placeholder: "Title", Attributes: getInputAttributes(props.Todo.Title)})
+			@corecomponents.TextArea(corecomponents.TextAreaProps{Name: "description", Placeholder: "Description", Rows: 10, Attributes: getInputAttributes(props.Todo.Description)})
+			@corecomponents.Button(getButtonProps(props))
+		</form>
+	</div>
+}

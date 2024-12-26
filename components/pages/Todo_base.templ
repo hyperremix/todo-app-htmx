@@ -10,7 +10,7 @@ templ TodoBase(todo model.Todo) {
 		@partials.Head()
 		<body class="bg-gray-900 text-white">
 			@partials.AppBar()
-			<div id="main-container" class="max-w-md mx-auto pt-5">
+			<div id="main-container" class="max-w-md h-full max-h-[calc(100%-72px)] mx-auto pt-5 px-2">
 				@partials.TodoPartial(todo)
 			</div>
 		</body>

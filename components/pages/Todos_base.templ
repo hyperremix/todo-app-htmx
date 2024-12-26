@@ -5,13 +5,13 @@ import (
 	"github.com/hyperremix/todo-app-htmx/model"
 )
 
-templ TodosBase(todos []model.Todo) {
+templ TodosBase(todos []model.Todo, todo model.Todo, isModalVisible bool) {
 	<html lang="en">
 		@partials.Head()
 		<body class="bg-gray-900 text-white">
 			@partials.AppBar()
-			<div id="main-container" class="max-w-md mx-auto pt-5">
-				@partials.TodosPartial(todos)
+			<div id="main-container" class="max-w-md h-full max-h-[calc(100%-72px)] mx-auto pt-5 px-2">
+				@partials.TodosPartial(todos, todo, isModalVisible)
 			</div>
 		</body>
 	</html>

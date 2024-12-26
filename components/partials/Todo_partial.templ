@@ -2,19 +2,28 @@ package partials
 
 import (
 	"fmt"
-	"github.com/hyperremix/todo-app-htmx/components/corecomponents"
 	"github.com/hyperremix/todo-app-htmx/model"
+	"strings"
 )
 
+var maxDescriptionLength = 50
+
 templ TodoPartial(todo model.Todo) {
-	<form class="flex flex-col items-stretch gap-3">
-		@corecomponents.Input(corecomponents.InputProps{Name: "id", Class: "hidden", Attributes: templ.Attributes{"value": fmt.Sprintf("%v", todo.ID)}})
-		@corecomponents.Input(corecomponents.InputProps{Name: "title", Placeholder: "Title", IsRequired: true, Attributes: templ.Attributes{"value": todo.Title}})
-		@corecomponents.TextArea(corecomponents.TextAreaProps{Name: "description", Placeholder: "Description", IsRequired: true, Rows: 10, Attributes: templ.Attributes{"value": todo.Description}})
-		if todo.ID != 0 {
-			@corecomponents.Button(corecomponents.ButtonProps{Label: "Update", Variant: "filled", Attributes: templ.Attributes{"hx-put": fmt.Sprintf("/todos/%v", todo.ID), "hx-swap": "innerHTML", "hx-target": "#main-container", "hx-push-url": "/"}})
-		} else {
-			@corecomponents.Button(corecomponents.ButtonProps{Label: "Create", Variant: "filled", Attributes: templ.Attributes{"hx-post": "/todos", "hx-swap": "innerHTML", "hx-target": "#main-container", "hx-push-url": "/"}})
-		}
-	</form>
+	<div class="flex justify-between items-center gap-2 cursor-pointer rounded-lg bg-slate-800 p-2" hx-get={ fmt.Sprintf("?isUpdateModalVisible=true&id=%v", todo.ID) } hx-swap="outerHTML" hx-target="#modal-container" hx-push-url="true">
+		<span class="text-lg">
+			if todo.Title == "" {
+				if todo.Description == "" {
+					Empty
+				} else {
+					if len(todo.Description) > maxDescriptionLength {
+						{ strings.TrimSpace(todo.Description[:maxDescriptionLength]) }...
+					} else {
+						{ todo.Description }
+					}
+				}
+			} else {
+				{ todo.Title }
+			}
+		</span>
+	</div>
 }

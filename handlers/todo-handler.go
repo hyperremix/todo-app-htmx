@@ -2,12 +2,13 @@ package handlers
 
 import (
 	"context"
-	"strconv"
 
+	"github.com/hyperremix/todo-app-htmx/components/corecomponents"
 	"github.com/hyperremix/todo-app-htmx/components/pages"
 	"github.com/hyperremix/todo-app-htmx/components/partials"
 	"github.com/hyperremix/todo-app-htmx/db"
 	"github.com/hyperremix/todo-app-htmx/environment"
+	"github.com/hyperremix/todo-app-htmx/model"
 	"github.com/hyperremix/todo-app-htmx/services"
 	"github.com/jackc/pgx/v5"
 	"github.com/labstack/echo/v4"
@@ -15,9 +16,8 @@ import (
 
 func DefineTodoRoutes(e *echo.Echo) {
 	e.GET("/", getTodos)
-	e.POST("/todos", createTodo)
-	e.GET("/todos/:id", getTodo)
-	e.PUT("/todos/:id", updateTodo)
+	e.POST("/", createTodo)
+	e.PUT("/:id", updateTodo)
 }
 
 func getTodos(echoCtx echo.Context) error {
@@ -29,37 +29,41 @@ func getTodos(echoCtx echo.Context) error {
 	defer conn.Close(dbCtx)
 
 	queries := db.New(conn)
-	return renderTodos(echoCtx, dbCtx, queries)
-}
 
-func getTodo(echoCtx echo.Context) error {
-	dbCtx := context.Background()
-	conn, err := pgx.Connect(dbCtx, environment.DB_CONNECTION_STRING)
-	if err != nil {
-		return err
-	}
-	defer conn.Close(dbCtx)
-
-	queries := db.New(conn)
-
-	id, err := strconv.ParseInt(echoCtx.Param("id"), 10, 64)
-	if err != nil {
-		return err
-	}
-
-	todoRow, err := queries.GetTodoById(dbCtx, id)
-	if err != nil {
-		return err
-	}
-
-	todo := services.MapRowToTodo(todoRow)
 	isHxRequest := echoCtx.Request().Header.Get("HX-Request")
-
-	if isHxRequest == "true" {
-		return services.Render(echoCtx, partials.TodoPartial(todo))
+	var request model.GetTodosRequest
+	if err := echoCtx.Bind(&request); err != nil {
+		return err
 	}
 
-	return services.Render(echoCtx, pages.TodoBase(todo))
+	todoId, isModalVisible := services.MapGetTodosRequest(request)
+	if isHxRequest == "true" {
+		if request.IsCreateModalVisible {
+			return services.Render(echoCtx, corecomponents.Modal(corecomponents.ModalProps{Content: partials.TodoForm(partials.TodoFormProps{Todo: model.Todo{}}), IsModalVisible: isModalVisible}))
+		}
+
+		if request.IsUpdateModalVisible {
+			todoRow, err := queries.GetTodoById(dbCtx, todoId)
+			if err != nil {
+				return err
+			}
+
+			todo := services.MapRowToTodo(todoRow)
+
+			return services.Render(echoCtx, corecomponents.Modal(corecomponents.ModalProps{Content: partials.TodoForm(partials.TodoFormProps{Todo: todo}), IsModalVisible: isModalVisible}))
+		}
+
+		return services.Render(echoCtx, corecomponents.Modal(corecomponents.ModalProps{IsModalVisible: false}))
+	}
+
+	todoRows, err := queries.ListTodos(dbCtx)
+	if err != nil {
+		return err
+	}
+
+	todos := services.MapRowsToTodo(todoRows)
+
+	return services.Render(echoCtx, pages.TodosBase(todos, model.Todo{}, isModalVisible))
 }
 
 func createTodo(echoCtx echo.Context) error {
@@ -82,7 +86,12 @@ func createTodo(echoCtx echo.Context) error {
 		return err
 	}
 
-	return renderTodos(echoCtx, dbCtx, queries)
+	todos, err := queries.ListTodos(dbCtx)
+	if err != nil {
+		return err
+	}
+
+	return services.Render(echoCtx, partials.TodosPartial(services.MapRowsToTodo(todos), model.Todo{}, false))
 }
 
 func updateTodo(echoCtx echo.Context) error {
@@ -105,22 +114,10 @@ func updateTodo(echoCtx echo.Context) error {
 		return err
 	}
 
-	return renderTodos(echoCtx, dbCtx, queries)
-}
-
-func renderTodos(echoCtx echo.Context, dbCtx context.Context, queries *db.Queries) error {
-	todoRows, err := queries.ListTodos(dbCtx)
+	todos, err := queries.ListTodos(dbCtx)
 	if err != nil {
 		return err
 	}
 
-	todos := services.MapRowsToTodo(todoRows)
-
-	isHxRequest := echoCtx.Request().Header.Get("HX-Request")
-
-	if isHxRequest == "true" {
-		return services.Render(echoCtx, partials.TodosPartial(todos))
-	}
-
-	return services.Render(echoCtx, pages.TodosBase(todos))
+	return services.Render(echoCtx, partials.TodosPartial(services.MapRowsToTodo(todos), model.Todo{}, false))
 }
