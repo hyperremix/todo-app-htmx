@@ -1,4 +1,4 @@
-package services
+package mapper
 
 import (
 	"github.com/hyperremix/todo-app-htmx/db"

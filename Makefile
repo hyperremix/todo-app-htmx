@@ -46,7 +46,7 @@ build:
 ## docker-build: build project into a docker container image
 .PHONY: docker-build
 docker-build: test
-	GOPROXY=direct docker buildx build -t ${name} .
+	GOPROXY=direct docker build -t ${name} .
 
 ## docker-run: run project in a container
 .PHONY: docker-run
@@ -77,3 +77,13 @@ new-migration:
 .PHONY: db-migrate
 db-migrate:
 	TERN_MIGRATIONS=db/migrations tern migrate
+
+## fly-db-proxy: start fly.io db proxy
+.PHONY: fly-db-proxy
+fly-db-proxy:
+	fly proxy 5434:5432 -a song-contest-rater-service-db
+
+## deploy: deploy to fly.io
+.PHONY: deploy
+deploy:
+	fly deploy
