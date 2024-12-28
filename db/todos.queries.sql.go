@@ -12,7 +12,7 @@ import (
 )
 
 const getTodoById = `-- name: GetTodoById :one
-SELECT id, title, description, is_completed, created_at, updated_at, deleted_at FROM todos WHERE id = $1 LIMIT 1
+SELECT id, title, description, is_completed, created_at, updated_at FROM todos WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) GetTodoById(ctx context.Context, id int64) (Todo, error) {
@@ -25,7 +25,6 @@ func (q *Queries) GetTodoById(ctx context.Context, id int64) (Todo, error) {
 		&i.IsCompleted,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.DeletedAt,
 	)
 	return i, err
 }
@@ -33,7 +32,7 @@ func (q *Queries) GetTodoById(ctx context.Context, id int64) (Todo, error) {
 const insertTodo = `-- name: InsertTodo :one
 INSERT INTO
     todos (title, description, is_completed)
-VALUES ($1, $2, $3) RETURNING id, title, description, is_completed, created_at, updated_at, deleted_at
+VALUES ($1, $2, $3) RETURNING id, title, description, is_completed, created_at, updated_at
 `
 
 type InsertTodoParams struct {
@@ -52,13 +51,12 @@ func (q *Queries) InsertTodo(ctx context.Context, arg InsertTodoParams) (Todo, e
 		&i.IsCompleted,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.DeletedAt,
 	)
 	return i, err
 }
 
 const listTodos = `-- name: ListTodos :many
-SELECT id, title, description, is_completed, created_at, updated_at, deleted_at FROM todos ORDER BY created_at DESC
+SELECT id, title, description, is_completed, created_at, updated_at FROM todos ORDER BY created_at DESC
 `
 
 func (q *Queries) ListTodos(ctx context.Context) ([]Todo, error) {
@@ -77,7 +75,6 @@ func (q *Queries) ListTodos(ctx context.Context) ([]Todo, error) {
 			&i.IsCompleted,
 			&i.CreatedAt,
 			&i.UpdatedAt,
-			&i.DeletedAt,
 		); err != nil {
 			return nil, err
 		}
@@ -98,7 +95,7 @@ SET
     is_completed = $3,
     updated_at = NOW()
 WHERE
-    id = $4 RETURNING id, title, description, is_completed, created_at, updated_at, deleted_at
+    id = $4 RETURNING id, title, description, is_completed, created_at, updated_at
 `
 
 type UpdateTodoParams struct {
@@ -123,7 +120,6 @@ func (q *Queries) UpdateTodo(ctx context.Context, arg UpdateTodoParams) (Todo, e
 		&i.IsCompleted,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.DeletedAt,
 	)
 	return i, err
 }

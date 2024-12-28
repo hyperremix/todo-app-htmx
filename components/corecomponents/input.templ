@@ -13,8 +13,8 @@ type InputProps struct {
 templ Input(props InputProps) {
 	<div class={ props.Class }>
 		if props.Label != "" {
-			<label for={ props.Name } class="block mb-2 text-sm font-medium text-white">{ props.Label }</label>
+			<label for={ props.Name } class="block mb-2 text-sm font-medium">{ props.Label }</label>
 		}
-		<input type={ props.Type } id={ props.Name } name={ props.Name } class="block border rounded-lg w-full p-2 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 dark:focus:border-blue-500" placeholder={ props.Placeholder } required?={ props.IsRequired } { props.Attributes... }/>
+		<input type={ props.Type } id={ props.Name } name={ props.Name } class="block border rounded-lg w-full p-2 bg-zinc-200 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 dark:placeholder-zinc-400 focus:ring-blue-500" placeholder={ props.Placeholder } required?={ props.IsRequired } { props.Attributes... }/>
 	</div>
 }

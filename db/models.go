@@ -15,5 +15,4 @@ type Todo struct {
 	IsCompleted pgtype.Bool
 	CreatedAt   pgtype.Timestamptz
 	UpdatedAt   pgtype.Timestamptz
-	DeletedAt   pgtype.Timestamptz
 }

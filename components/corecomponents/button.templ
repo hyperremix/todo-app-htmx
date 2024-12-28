@@ -1,13 +1,13 @@
 package corecomponents
 
 type ButtonProps struct {
-	Label   string
-	Variant string
+	Label      string
+	Variant    string
 	Attributes templ.Attributes
 }
 
 var variantClassesMap = map[string][]string{
-	"filled":   {"bg-blue-500", "text-white", "hover:bg-blue-400", "active:bg-blue-300", "border", "border-blue-500"},
+	"filled":   {"bg-blue-500", "text-zinc-200", "hover:bg-blue-400", "active:bg-blue-300", "border", "border-blue-500"},
 	"outlined": {"border", "border-blue-500", "text-blue-500", "hover:bg-blue-500", "hover:bg-opacity-25", "active:bg-blue-500", "active:bg-opacity-50"},
 	"text":     {"text-blue-500", "hover:bg-blue-500", "hover:bg-opacity-25", "active:bg-blue-500", "active:bg-opacity-50"},
 }
