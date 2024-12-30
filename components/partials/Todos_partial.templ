@@ -8,7 +8,11 @@ import (
 templ TodosPartial(todos []model.Todo, todo model.Todo, isModalVisible bool) {
 	<div id="todos-container" class="flex flex-col gap-4">
 		<div class="flex justify-center">
-			@corecomponents.Button(corecomponents.ButtonProps{Label: "Create", Variant: "filled", Attributes: templ.Attributes{"hx-get": "?isCreateModalVisible=true", "hx-swap": "outerHTML", "hx-target": "#modal-container", "hx-trigger": "click", "hx-push-url": "true", "class": "w-full max-w-md"}})
+			<form class="flex flex-col gap-2 w-full max-w-md group" hx-post="/" hx-swap="outerHTML" hx-target="#todos-container" hx-push-url="true">
+				@corecomponents.Input(corecomponents.InputProps{Name: "title", Placeholder: "Title", Attributes: templ.Attributes{"class": "hidden group-focus-within:block"}})
+				@corecomponents.TextArea(corecomponents.TextAreaProps{Name: "description", Placeholder: "Enter a todo", Rows: 1})
+				@corecomponents.Button(corecomponents.ButtonProps{Label: "Create", Variant: "filled", Attributes: templ.Attributes{"class": "hidden group-focus-within:block"}})
+			</form>
 		</div>
 		<div class="columns-3xs gap-2 space-y-2">
 			for _, todo := range todos {

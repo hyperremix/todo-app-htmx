@@ -1,5 +1,10 @@
 package corecomponents
 
+import (
+	"fmt"
+	"github.com/hyperremix/todo-app-htmx/util"
+)
+
 type InputProps struct {
 	Name        string
 	Label       string
@@ -7,14 +12,21 @@ type InputProps struct {
 	IsRequired  bool
 	Attributes  templ.Attributes
 	Type        string
-	Class       string
+}
+
+templ innerInput(props InputProps) {
+	<input type={ props.Type } id={ props.Name } name={ props.Name } class={ fmt.Sprintf("%s %s", "block border rounded-lg w-full p-2 bg-zinc-200 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 dark:placeholder-zinc-400 focus:ring-blue-500", util.GetClassAttributeValue(props.Attributes)) } placeholder={ props.Placeholder } required?={ props.IsRequired } { util.DeleteClassAttribute(props.Attributes)... }/>
 }
 
 templ Input(props InputProps) {
-	<div class={ props.Class }>
-		if props.Label != "" {
-			<label for={ props.Name } class="block mb-2 text-sm font-medium">{ props.Label }</label>
-		}
-		<input type={ props.Type } id={ props.Name } name={ props.Name } class="block border rounded-lg w-full p-2 bg-zinc-200 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 dark:placeholder-zinc-400 focus:ring-blue-500" placeholder={ props.Placeholder } required?={ props.IsRequired } { props.Attributes... }/>
-	</div>
+	if (props.Label != "") {
+		<div class={ util.GetClassAttributeValue(props.Attributes) }>
+			if props.Label != "" {
+				<label for={ props.Name } class="block mb-2 text-sm font-medium">{ props.Label }</label>
+			}
+			@innerInput(InputProps{Name: props.Name, Placeholder: props.Placeholder, IsRequired: props.IsRequired, Attributes: util.DeleteClassAttribute(props.Attributes), Type: props.Type})
+		</div>
+	} else {
+		@innerInput(props)
+	}
 }

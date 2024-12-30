@@ -21,3 +21,8 @@ func GetClassAttributeSlice(attributes templ.Attributes) []string {
 
 	return []string{}
 }
+
+func DeleteClassAttribute(attributes templ.Attributes) templ.Attributes {
+	delete(attributes, "class")
+	return attributes
+}

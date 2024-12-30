@@ -1,6 +1,10 @@
 package corecomponents
 
-import "strconv"
+import (
+	"fmt"
+	"github.com/hyperremix/todo-app-htmx/util"
+	"strconv"
+)
 
 type TextAreaProps struct {
 	Name        string
@@ -11,11 +15,19 @@ type TextAreaProps struct {
 	Rows        int
 }
 
+templ innerTextArea(props TextAreaProps) {
+	<textarea id={ props.Name } name={ props.Name } class={ fmt.Sprintf("%s %s", "block border rounded-lg w-full p-2 bg-zinc-200 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 dark:placeholder-zinc-400 focus:ring-blue-500", util.GetClassAttributeValue(props.Attributes)) } placeholder={ props.Placeholder } required?={ props.IsRequired } { util.DeleteClassAttribute(props.Attributes)... } rows={ strconv.Itoa(props.Rows) }></textarea>
+}
+
 templ TextArea(props TextAreaProps) {
-	<div>
-		if props.Label != "" {
-			<label for={ props.Name } class="block mb-2 text-sm font-medium">{ props.Label }</label>
-		}
-		<textarea id={ props.Name } name={ props.Name } class="block border rounded-lg w-full p-2 bg-zinc-200 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 placeholder-zinc-500 dark:placeholder-zinc-400 focus:ring-blue-500" placeholder={ props.Placeholder } required?={ props.IsRequired } { props.Attributes... } rows={ strconv.Itoa(props.Rows) }></textarea>
-	</div>
+	if (props.Label != "") {
+		<div class={ util.GetClassAttributeValue(props.Attributes) }>
+			if props.Label != "" {
+				<label for={ props.Name } class="block mb-2 text-sm font-medium">{ props.Label }</label>
+			}
+			@innerTextArea(TextAreaProps{Name: props.Name, Placeholder: props.Placeholder, IsRequired: props.IsRequired, Attributes: util.DeleteClassAttribute(props.Attributes), Rows: props.Rows})
+		</div>
+	} else {
+		@innerTextArea(props)
+	}
 }
