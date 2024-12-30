@@ -4,10 +4,24 @@ type IconButtonProps struct {
 	Icon       templ.Component
 	Variant    string
 	Attributes templ.Attributes
+	Tooltip    string
+}
+
+templ innerIconButton(props IconButtonProps) {
+	<button class={ append([]string{"font-bold", "p-2", "rounded-full", "inline-flex", "fill-blue-500"}, variantClassesMap[props.Variant]...) } { props.Attributes... }>
+		@props.Icon
+	</button>
 }
 
 templ IconButton(props IconButtonProps) {
-	<button class={ append([]string{"font-bold", "p-2", "rounded-full", "inline-flex", "fill-blue-500"}, variantClassesMap[props.Variant]...) } type="submit" { props.Attributes... }>
-		@props.Icon
-	</button>
+	if (props.Tooltip != "") {
+		<div class="relative inline-block group/check">
+			@innerIconButton(props)
+			<p class="absolute z-10 hidden bg-black text-white text-xs rounded-lg py-1 px-4 bottom-8 left-1/2 transform -translate-x-1/2 group-hover/check:flex justify-center w-32">
+				{ props.Tooltip }
+			</p>
+		</div>
+	} else {
+		@innerIconButton(props)
+	}
 }

@@ -37,34 +37,32 @@ func getTodos(connPool *pgxpool.Pool) echo.HandlerFunc {
 			return err
 		}
 
-		todoId, isModalVisible := mapper.MapGetTodosRequest(request)
+		todo := model.Todo{}
+		if request.IsUpdateModalVisible {
+			todoRow, err := queries.GetTodoById(ctx, int64(request.TodoID))
+			if err != nil {
+				return err
+			}
+
+			todo = mapper.MapRowToTodo(todoRow)
+
+			if isHxRequest == "true" {
+				return template.Render(echoCtx, partials.UpdateTodoModal(todo, true))
+			}
+		}
+
 		if isHxRequest == "true" {
-			if request.IsCreateModalVisible {
-				return template.Render(echoCtx, corecomponents.Modal(corecomponents.ModalProps{Content: partials.TodoForm(partials.TodoFormProps{Todo: model.Todo{}}), IsModalVisible: isModalVisible}))
-			}
-
-			if request.IsUpdateModalVisible {
-				todoRow, err := queries.GetTodoById(ctx, todoId)
-				if err != nil {
-					return err
-				}
-
-				todo := mapper.MapRowToTodo(todoRow)
-
-				return template.Render(echoCtx, corecomponents.Modal(corecomponents.ModalProps{Content: partials.TodoForm(partials.TodoFormProps{Todo: todo}), IsModalVisible: isModalVisible}))
-			}
-
 			return template.Render(echoCtx, corecomponents.Modal(corecomponents.ModalProps{IsModalVisible: false}))
 		}
 
-		todoRows, err := queries.ListTodos(ctx)
+		todoRows, err := queries.ListOpenTodos(ctx)
 		if err != nil {
 			return err
 		}
 
 		todos := mapper.MapRowsToTodo(todoRows)
 
-		return template.Render(echoCtx, pages.TodosBase(todos, model.Todo{}, isModalVisible))
+		return template.Render(echoCtx, pages.TodosBase(todos, todo, request.IsUpdateModalVisible))
 	}
 }
 
@@ -89,7 +87,7 @@ func createTodo(connPool *pgxpool.Pool) echo.HandlerFunc {
 			return err
 		}
 
-		todos, err := queries.ListTodos(ctx)
+		todos, err := queries.ListOpenTodos(ctx)
 		if err != nil {
 			return err
 		}
@@ -119,7 +117,7 @@ func updateTodo(connPool *pgxpool.Pool) echo.HandlerFunc {
 			return err
 		}
 
-		todos, err := queries.ListTodos(ctx)
+		todos, err := queries.ListOpenTodos(ctx)
 		if err != nil {
 			return err
 		}

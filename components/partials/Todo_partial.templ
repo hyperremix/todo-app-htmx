@@ -2,11 +2,20 @@ package partials
 
 import (
 	"fmt"
+	"github.com/hyperremix/todo-app-htmx/components/corecomponents"
+	"github.com/hyperremix/todo-app-htmx/components/icons"
 	"github.com/hyperremix/todo-app-htmx/model"
 )
 
 templ TodoPartial(todo model.Todo) {
-	<div class="flex flex-col gap-4 cursor-pointer rounded-lg bg-zinc-50 dark:bg-zinc-900 p-2 break-inside-avoid" hx-get={ fmt.Sprintf("?isUpdateModalVisible=true&id=%v", todo.ID) } hx-swap="outerHTML" hx-target="#modal-container" hx-push-url="true">
+	<div class="group relative flex flex-col gap-4 cursor-pointer rounded-lg bg-zinc-50 dark:bg-zinc-900 p-2 break-inside-avoid" hx-get={ fmt.Sprintf("?isUpdateModalVisible=true&id=%v", todo.ID) } hx-swap="outerHTML" hx-target="#modal-container" hx-push-url="true">
+		<form class="absolute top-1 right-1 hidden group-hover:block">
+			@corecomponents.Input(corecomponents.InputProps{Name: "id", Attributes: getInputAttributes(todo.ID, "hidden")})
+			@corecomponents.Input(corecomponents.InputProps{Name: "title", Attributes: getInputAttributes(todo.Title, "hidden")})
+			@corecomponents.TextArea(corecomponents.TextAreaProps{Name: "description", Attributes: getInputAttributes(todo.Description, "hidden")})
+			@corecomponents.Input(corecomponents.InputProps{Name: "is_completed", Attributes: getInputAttributes(true, "hidden")})
+			@corecomponents.IconButton(corecomponents.IconButtonProps{Icon: icons.Check(), Variant: "text", Tooltip: "Mark as done", Attributes: templ.Attributes{"type": "submit", "hx-put": fmt.Sprintf("/%v", todo.ID), "hx-swap": "outerHTML", "hx-target": "#todos-container", "hx-push-url": "/", "hx-trigger": "click consume"}})
+		</form>
 		if todo.Title != "" {
 			<span class="text-lg font-bold">{ todo.Title }</span>
 		}

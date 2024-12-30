@@ -51,19 +51,3 @@ func MapTodoToUpdate(todo model.Todo) db.UpdateTodoParams {
 		IsCompleted: pgtype.Bool{Bool: todo.IsCompleted, Valid: true},
 	}
 }
-
-func MapGetTodosRequest(request model.GetTodosRequest) (int64, bool) {
-	todoId := 0
-	isModalVisible := false
-
-	if request.IsCreateModalVisible {
-		isModalVisible = true
-	}
-
-	if request.IsUpdateModalVisible {
-		isModalVisible = true
-		todoId = request.TodoID
-	}
-
-	return int64(todoId), isModalVisible
-}

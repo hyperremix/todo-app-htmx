@@ -1,16 +1,24 @@
 package corecomponents
 
+import "github.com/hyperremix/todo-app-htmx/components/icons"
+
 type ModalProps struct {
-	IsModalVisible bool
-	Content        templ.Component
+	IsModalVisible  bool
+	Content         templ.Component
+	CloseAttributes templ.Attributes
 }
 
 templ Modal(props ModalProps) {
 	<div id="modal-container">
 		if (props.IsModalVisible) {
 			<div tabindex="-1" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-full backdrop-brightness-50">
-				<div class="relative p-4 w-full max-w-md h-full flex items-center justify-center mx-auto">
-					<div class="w-full bg-zinc-50 dark:bg-zinc-900 rounded-lg p-2 shadow-xl">
+				<div class="p-4 w-full max-w-md h-full flex items-center justify-center mx-auto">
+					<div class="relative w-full bg-zinc-50 dark:bg-zinc-900 rounded-lg p-2 shadow-xl">
+						if props.CloseAttributes != nil {
+							<div class="absolute top-1 right-1">
+								@IconButton(IconButtonProps{Icon: icons.Close(), Variant: "text", Attributes: props.CloseAttributes})
+							</div>
+						}
 						@props.Content
 					</div>
 				</div>

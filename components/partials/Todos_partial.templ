@@ -19,6 +19,6 @@ templ TodosPartial(todos []model.Todo, todo model.Todo, isModalVisible bool) {
 				@TodoPartial(todo)
 			}
 		</div>
-		@corecomponents.Modal(corecomponents.ModalProps{Content: TodoForm(TodoFormProps{Todo: todo}), IsModalVisible: isModalVisible})
+		@UpdateTodoModal(todo, isModalVisible)
 	</div>
 }

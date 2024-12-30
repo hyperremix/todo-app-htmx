@@ -55,6 +55,37 @@ func (q *Queries) InsertTodo(ctx context.Context, arg InsertTodoParams) (Todo, e
 	return i, err
 }
 
+const listOpenTodos = `-- name: ListOpenTodos :many
+SELECT id, title, description, is_completed, created_at, updated_at FROM todos WHERE is_completed = FALSE ORDER BY created_at DESC
+`
+
+func (q *Queries) ListOpenTodos(ctx context.Context) ([]Todo, error) {
+	rows, err := q.db.Query(ctx, listOpenTodos)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Todo
+	for rows.Next() {
+		var i Todo
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Description,
+			&i.IsCompleted,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listTodos = `-- name: ListTodos :many
 SELECT id, title, description, is_completed, created_at, updated_at FROM todos ORDER BY created_at DESC
 `
