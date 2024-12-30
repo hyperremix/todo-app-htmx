@@ -1,5 +1,7 @@
 package corecomponents
 
+import "github.com/hyperremix/todo-app-htmx/util"
+
 type ButtonProps struct {
 	Label      string
 	Variant    string
@@ -12,8 +14,14 @@ var variantClassesMap = map[string][]string{
 	"text":     {"text-blue-500", "hover:bg-blue-500", "hover:bg-opacity-25", "active:bg-blue-500", "active:bg-opacity-50"},
 }
 
+func getClasses(props ButtonProps) []string {
+	classes := []string{"font-bold", "py-2", "px-4", "rounded-lg"}
+	classes = append(classes, variantClassesMap[props.Variant]...)
+	return append(classes, util.GetClassAttributeSlice(props.Attributes)...)
+}
+
 templ Button(props ButtonProps) {
-	<button style="text-wrap: nowrap;" class={ append([]string{"font-bold", "py-2", "px-4", "rounded-lg"}, variantClassesMap[props.Variant]...) } type="submit" { props.Attributes... }>
+	<button style="text-wrap: nowrap;" class={ getClasses(props) } type="submit" { props.Attributes... }>
 		{ props.Label }
 	</button>
 }

@@ -3,27 +3,18 @@ package partials
 import (
 	"fmt"
 	"github.com/hyperremix/todo-app-htmx/model"
-	"strings"
 )
 
-var maxDescriptionLength = 50
-
 templ TodoPartial(todo model.Todo) {
-	<div class="flex justify-between items-center gap-2 cursor-pointer rounded-lg bg-zinc-50 dark:bg-zinc-900 p-2" hx-get={ fmt.Sprintf("?isUpdateModalVisible=true&id=%v", todo.ID) } hx-swap="outerHTML" hx-target="#modal-container" hx-push-url="true">
-		<span class="text-lg">
-			if todo.Title == "" {
-				if todo.Description == "" {
-					Empty
-				} else {
-					if len(todo.Description) > maxDescriptionLength {
-						{ strings.TrimSpace(todo.Description[:maxDescriptionLength]) }...
-					} else {
-						{ todo.Description }
-					}
-				}
-			} else {
-				{ todo.Title }
-			}
-		</span>
+	<div class="flex flex-col gap-4 cursor-pointer rounded-lg bg-zinc-50 dark:bg-zinc-900 p-2 break-inside-avoid" hx-get={ fmt.Sprintf("?isUpdateModalVisible=true&id=%v", todo.ID) } hx-swap="outerHTML" hx-target="#modal-container" hx-push-url="true">
+		if todo.Title != "" {
+			<span class="text-lg font-bold">{ todo.Title }</span>
+		}
+		if todo.Description != "" {
+			<span class="text-sm">{ todo.Description }</span>
+		}
+		if todo.Title == "" && todo.Description == "" {
+			<span class="text-lg text-zinc-400">Empty</span>
+		}
 	</div>
 }

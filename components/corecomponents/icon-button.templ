@@ -7,7 +7,7 @@ type IconButtonProps struct {
 }
 
 templ IconButton(props IconButtonProps) {
-	<button class={ append([]string{"font-bold", "p-2", "rounded-full", "inline-flex"}, variantClassesMap[props.Variant]...) } type="submit" { props.Attributes... }>
+	<button class={ append([]string{"font-bold", "p-2", "rounded-full", "inline-flex", "fill-blue-500"}, variantClassesMap[props.Variant]...) } type="submit" { props.Attributes... }>
 		@props.Icon
 	</button>
 }

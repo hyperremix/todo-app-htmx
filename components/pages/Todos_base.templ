@@ -8,9 +8,9 @@ import (
 templ TodosBase(todos []model.Todo, todo model.Todo, isModalVisible bool) {
 	<html lang="en">
 		@partials.Head()
-		<body class="bg-zinc-200 dark:bg-zinc-950 text-zinc-950 dark:text-zinc-200">
+		<body class="bg-zinc-200 dark:bg-zinc-950 text-zinc-950 dark:text-zinc-200 fill-zinc-950 dark:fill-zinc-200">
 			@partials.AppBar()
-			<div id="main-container" class="max-w-md h-full max-h-[calc(100%-72px)] mx-auto pt-5 px-2">
+			<div id="main-container" class="max-h-[calc(100%-72px)] pt-5 px-2">
 				@partials.TodosPartial(todos, todo, isModalVisible)
 			</div>
 		</body>
