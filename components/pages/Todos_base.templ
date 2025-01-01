@@ -1,17 +1,14 @@
 package pages
 
-import (
-	"github.com/hyperremix/todo-app-htmx/components/partials"
-	"github.com/hyperremix/todo-app-htmx/model"
-)
+import "github.com/hyperremix/todo-app-htmx/components/partials"
 
-templ TodosBase(todos []model.Todo, todo model.Todo, isModalVisible bool) {
+templ TodosBase(props partials.TodosProps) {
 	<html lang="en">
 		@partials.Head()
 		<body class="bg-zinc-200 dark:bg-zinc-950 text-zinc-950 dark:text-zinc-200 fill-zinc-950 dark:fill-zinc-200">
 			@partials.AppBar()
 			<div id="main-container" class="max-h-[calc(100%-72px)] pt-5 px-2">
-				@partials.TodosPartial(todos, todo, isModalVisible)
+				@partials.TodosPartial(props)
 			</div>
 		</body>
 	</html>

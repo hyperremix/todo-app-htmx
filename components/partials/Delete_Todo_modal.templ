@@ -1,0 +1,26 @@
+package partials
+
+import (
+	"fmt"
+	"github.com/hyperremix/todo-app-htmx/components/corecomponents"
+	"github.com/hyperremix/todo-app-htmx/model"
+)
+
+var closeDeleteModalAttributes = templ.Attributes{"hx-get": "/", "hx-swap": "innerHTML", "hx-target": "#modal-container", "hx-trigger": "click", "hx-push-url": "true", "class": "grow"}
+
+templ DeleteTodoModalContent(todo model.Todo) {
+	<div class="flex flex-col gap-4">
+		<h2 class="text-2xl">
+			Delete Todo
+		</h2>
+		<p>Are you sure you want to delete this todo?</p>
+		<div class="flex gap-2">
+			@corecomponents.Button(corecomponents.ButtonProps{Label: "Cancel", Variant: "outlined", Attributes: closeDeleteModalAttributes})
+			@corecomponents.Button(corecomponents.ButtonProps{Label: "Delete", Variant: "filled", Color: "error", Attributes: templ.Attributes{"hx-delete": fmt.Sprintf("/%v", todo.ID), "hx-swap": "outerHTML", "hx-target": "#todos-container", "hx-push-url": "/", "class": "grow"}})
+		</div>
+	</div>
+}
+
+templ DeleteTodoModal(todo model.Todo, isModalVisible bool) {
+	@corecomponents.Modal(corecomponents.ModalProps{Content: DeleteTodoModalContent(todo), IsModalVisible: isModalVisible, CloseAttributes: closeDeleteModalAttributes})
+}

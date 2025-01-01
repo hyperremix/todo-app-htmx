@@ -3,8 +3,12 @@
 @tailwind utilities;
 
 @layer base {
-    svg {
-      width: 1em;
-      height: 1em;
-    }
+  svg {
+    width: 1em;
+    height: 1em;
   }
+
+  form {
+    margin-bottom: 0;
+  }
+}

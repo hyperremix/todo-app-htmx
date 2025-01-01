@@ -22,3 +22,6 @@ SET
     updated_at = NOW()
 WHERE
     id = $4 RETURNING *;
+
+-- name: DeleteTodoById :one
+DELETE FROM todos WHERE id = $1 RETURNING *;

@@ -7,6 +7,8 @@ import (
 	"reflect"
 )
 
+var closeUpdateModalAttributes = templ.Attributes{"hx-get": "/", "hx-swap": "innerHTML", "hx-target": "#modal-container", "hx-trigger": "click", "hx-push-url": "true", "class": "grow"}
+
 func getInputAttributes(value interface{}, class string) templ.Attributes {
 	attributes := templ.Attributes{}
 
@@ -26,15 +28,18 @@ templ UpdateTodoForm(todo model.Todo) {
 		<h2 class="text-2xl">
 			Update Todo
 		</h2>
-		<form class="flex flex-col items-stretch gap-3 mb-0" hx-put={ fmt.Sprintf("/%v", todo.ID) } hx-swap="outerHTML" hx-target="#todos-container" hx-push-url="/">
+		<form class="flex flex-col items-stretch gap-3" hx-put={ fmt.Sprintf("/%v", todo.ID) } hx-swap="outerHTML" hx-target="#todos-container" hx-push-url="/">
 			@corecomponents.Input(corecomponents.InputProps{Name: "id", Attributes: getInputAttributes(todo.ID, "hidden")})
 			@corecomponents.Input(corecomponents.InputProps{Name: "title", Placeholder: "Title", Attributes: getInputAttributes(todo.Title, "")})
 			@corecomponents.TextArea(corecomponents.TextAreaProps{Name: "description", Placeholder: "Description", Rows: 10, Attributes: getInputAttributes(todo.Description, "")})
-			@corecomponents.Button(corecomponents.ButtonProps{Label: "Update", Variant: "filled"})
+			<div class="flex justify-stretch gap-2">
+				@corecomponents.Button(corecomponents.ButtonProps{Label: "Cancel", Variant: "outlined", Attributes: closeUpdateModalAttributes})
+				@corecomponents.Button(corecomponents.ButtonProps{Label: "Update", Variant: "filled", Attributes: templ.Attributes{"class": "grow"}})
+			</div>
 		</form>
 	</div>
 }
 
 templ UpdateTodoModal(todo model.Todo, isModalVisible bool) {
-	@corecomponents.Modal(corecomponents.ModalProps{Content: UpdateTodoForm(todo), IsModalVisible: isModalVisible, CloseAttributes: templ.Attributes{"hx-get": "/", "hx-swap": "outerHTML", "hx-target": "#modal-container", "hx-trigger": "click", "hx-push-url": "true"}})
+	@corecomponents.Modal(corecomponents.ModalProps{Content: UpdateTodoForm(todo), IsModalVisible: isModalVisible, CloseAttributes: closeUpdateModalAttributes})
 }

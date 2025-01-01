@@ -1,22 +1,34 @@
 package corecomponents
 
-import "github.com/hyperremix/todo-app-htmx/util"
+import (
+	"fmt"
+	"github.com/hyperremix/todo-app-htmx/util"
+)
 
 type ButtonProps struct {
 	Label      string
 	Variant    string
 	Attributes templ.Attributes
+	Color      string
 }
 
 var variantClassesMap = map[string][]string{
-	"filled":   {"bg-blue-500", "text-zinc-200", "hover:bg-blue-400", "active:bg-blue-300", "border", "border-blue-500"},
-	"outlined": {"border", "border-blue-500", "text-blue-500", "hover:bg-blue-500", "hover:bg-opacity-25", "active:bg-blue-500", "active:bg-opacity-50"},
-	"text":     {"text-blue-500", "hover:bg-blue-500", "hover:bg-opacity-25", "active:bg-blue-500", "active:bg-opacity-50"},
+	"filled:primary":   {"bg-blue-500", "text-zinc-200", "hover:bg-blue-400", "active:bg-blue-300", "border", "border-blue-500", "fill-zinc-200"},
+	"filled:error":     {"bg-red-500", "text-zinc-200", "hover:bg-red-400", "active:bg-red-300", "border", "border-red-500", "fill-zinc-500"},
+	"outlined:primary": {"border", "border-blue-500", "text-blue-500", "hover:bg-blue-500", "hover:bg-opacity-25", "active:bg-blue-500", "active:bg-opacity-50", "fill-blue-500"},
+	"outlined:error":   {"border", "border-red-500", "text-red-500", "hover:bg-red-500", "hover:bg-opacity-25", "active:bg-red-500", "active:bg-opacity-50", "fill-red-500"},
+	"text:primary":     {"text-blue-500", "hover:bg-blue-500", "hover:bg-opacity-25", "active:bg-blue-500", "active:bg-opacity-50", "fill-blue-500"},
+	"text:error":       {"text-red-500", "hover:bg-red-500", "hover:bg-opacity-25", "active:bg-red-500", "active:bg-opacity-50", "fill-red-500"},
 }
 
 func getClasses(props ButtonProps) []string {
+	color := "primary"
+	if props.Color != "" {
+		color = props.Color
+	}
+
 	classes := []string{"font-bold", "py-2", "px-4", "rounded-lg"}
-	classes = append(classes, variantClassesMap[props.Variant]...)
+	classes = append(classes, variantClassesMap[fmt.Sprintf("%s:%s", props.Variant, color)]...)
 	return append(classes, util.GetClassAttributeSlice(props.Attributes)...)
 }
 

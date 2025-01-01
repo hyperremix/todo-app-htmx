@@ -5,7 +5,14 @@ import (
 	"github.com/hyperremix/todo-app-htmx/model"
 )
 
-templ TodosPartial(todos []model.Todo, todo model.Todo, isModalVisible bool) {
+type TodosProps struct {
+	Todos                []model.Todo
+	Todo                 model.Todo
+	IsUpdateModalVisible bool
+	IsDeleteModalVisible bool
+}
+
+templ TodosPartial(props TodosProps) {
 	<div id="todos-container" class="flex flex-col gap-4">
 		<div class="flex justify-center">
 			<form class="flex flex-col gap-2 w-full max-w-md group" hx-post="/" hx-swap="outerHTML" hx-target="#todos-container" hx-push-url="true">
@@ -15,10 +22,13 @@ templ TodosPartial(todos []model.Todo, todo model.Todo, isModalVisible bool) {
 			</form>
 		</div>
 		<div class="columns-3xs gap-2 space-y-2">
-			for _, todo := range todos {
+			for _, todo := range props.Todos {
 				@TodoPartial(todo)
 			}
 		</div>
-		@UpdateTodoModal(todo, isModalVisible)
+		<div id="modal-container">
+			@UpdateTodoModal(props.Todo, props.IsUpdateModalVisible)
+			@DeleteTodoModal(props.Todo, props.IsDeleteModalVisible)
+		</div>
 	</div>
 }

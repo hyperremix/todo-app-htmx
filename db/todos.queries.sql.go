@@ -11,6 +11,24 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const deleteTodoById = `-- name: DeleteTodoById :one
+DELETE FROM todos WHERE id = $1 RETURNING id, title, description, is_completed, created_at, updated_at
+`
+
+func (q *Queries) DeleteTodoById(ctx context.Context, id int64) (Todo, error) {
+	row := q.db.QueryRow(ctx, deleteTodoById, id)
+	var i Todo
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Description,
+		&i.IsCompleted,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getTodoById = `-- name: GetTodoById :one
 SELECT id, title, description, is_completed, created_at, updated_at FROM todos WHERE id = $1 LIMIT 1
 `

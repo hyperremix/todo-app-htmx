@@ -1,14 +1,31 @@
 package corecomponents
 
+import (
+	"fmt"
+	"github.com/hyperremix/todo-app-htmx/util"
+)
+
 type IconButtonProps struct {
 	Icon       templ.Component
 	Variant    string
 	Attributes templ.Attributes
 	Tooltip    string
+	Color      string
+}
+
+func getIconButtonClasses(props IconButtonProps) []string {
+	color := "primary"
+	if props.Color != "" {
+		color = props.Color
+	}
+
+	classes := []string{"font-bold", "p-2", "rounded-full", "inline-flex"}
+	classes = append(classes, variantClassesMap[fmt.Sprintf("%s:%s", props.Variant, color)]...)
+	return append(classes, util.GetClassAttributeSlice(props.Attributes)...)
 }
 
 templ innerIconButton(props IconButtonProps) {
-	<button class={ append([]string{"font-bold", "p-2", "rounded-full", "inline-flex", "fill-blue-500"}, variantClassesMap[props.Variant]...) } { props.Attributes... }>
+	<button class={ getIconButtonClasses(props) } { props.Attributes... }>
 		@props.Icon
 	</button>
 }
