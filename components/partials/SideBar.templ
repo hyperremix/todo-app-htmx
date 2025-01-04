@@ -1,0 +1,21 @@
+package partials
+
+import (
+	"github.com/hyperremix/todo-app-htmx/components/corecomponents"
+	"github.com/hyperremix/todo-app-htmx/components/icons"
+	"github.com/hyperremix/todo-app-htmx/model"
+)
+
+templ SideBar(selectedItem model.SideBarItem) {
+	<input id="expand-side-bar" type="checkbox" class="hidden peer"/>
+	<aside class="fixed top-16 h-[calc(100%-64px)] left-0 w-14 bg-zinc-50 dark:bg-zinc-900 shadow-lg z-50 transition-[width] ease-in-out delay-150 duration-300 peer-checked:w-44 overflow-hidden py-2 flex flex-col justify-between text-2xl">
+		<div class="flex flex-col w-44">
+			@corecomponents.SideBarItem(corecomponents.SideBarItemProps{Icon: icons.CheckCircleOutline(), Label: "Todos", IsSelected: selectedItem == model.SideBarItemTodos, Attributes: templ.Attributes{"hx-get": "/", "hx-swap": "innerHTML", "hx-target": "#main-container", "hx-trigger": "click"}})
+			@corecomponents.SideBarItem(corecomponents.SideBarItemProps{Icon: icons.ArchiveArrowDownOutline(), Label: "Archive", IsSelected: selectedItem == model.SideBarItemArchive, Attributes: templ.Attributes{"hx-get": "/archive", "hx-swap": "innerHTML", "hx-target": "#main-container", "hx-trigger": "click"}})
+		</div>
+		<label for="expand-side-bar" class="cursor-pointer px-4">
+			@icons.ExpandHorizontal()
+		</label>
+	</aside>
+	<div class="w-14 transition-[width] ease-in-out delay-150 duration-300 peer-checked:w-44"></div>
+}

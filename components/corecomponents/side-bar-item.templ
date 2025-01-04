@@ -1,0 +1,32 @@
+package corecomponents
+
+import (
+	"fmt"
+	"github.com/hyperremix/todo-app-htmx/util"
+)
+
+type SideBarItemProps struct {
+	Icon       templ.Component
+	Label      string
+	IsSelected bool
+	Attributes templ.Attributes
+}
+
+func getSideBarItemClass(props SideBarItemProps) string {
+	class := "flex items-center gap-4 cursor-pointer hover:bg-zinc-800 px-4 py-2"
+
+	if props.IsSelected {
+		class = fmt.Sprintf("%s text-blue-500 fill-blue-500", class)
+	}
+
+	return fmt.Sprintf("%s %s", class, util.GetClassAttributeValue(props.Attributes))
+}
+
+templ SideBarItem(props SideBarItemProps) {
+	<div class={ getSideBarItemClass(props) } { props.Attributes... }>
+		@props.Icon
+		if (props.Label != "") {
+			<span>{ props.Label }</span>
+		}
+	</div>
+}

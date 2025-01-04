@@ -8,27 +8,31 @@ import (
 type TodosProps struct {
 	Todos                []model.Todo
 	Todo                 model.Todo
+	SelectedSideBarItem  model.SideBarItem
 	IsUpdateModalVisible bool
 	IsDeleteModalVisible bool
 }
 
 templ TodosPartial(props TodosProps) {
-	<div id="todos-container" class="flex flex-col gap-4">
-		<div class="flex justify-center">
-			<form class="flex flex-col gap-2 w-full max-w-md group" hx-post="/" hx-swap="outerHTML" hx-target="#todos-container" hx-push-url="true">
-				@corecomponents.Input(corecomponents.InputProps{Name: "title", Placeholder: "Title", Attributes: templ.Attributes{"class": "hidden group-focus-within:block"}})
-				@corecomponents.TextArea(corecomponents.TextAreaProps{Name: "description", Placeholder: "Enter a todo", Rows: 1})
-				@corecomponents.Button(corecomponents.ButtonProps{Label: "Create", Variant: "filled", Attributes: templ.Attributes{"class": "hidden group-focus-within:block"}})
-			</form>
-		</div>
-		<div class="columns-3xs gap-2 space-y-2">
-			for _, todo := range props.Todos {
-				@TodoPartial(todo)
-			}
-		</div>
-		<div id="modal-container">
-			@UpdateTodoModal(props.Todo, props.IsUpdateModalVisible)
-			@DeleteTodoModal(props.Todo, props.IsDeleteModalVisible)
+	<div class="flex">
+		@SideBar(props.SelectedSideBarItem)
+		<div id="todos-container" class="flex flex-col gap-4 pt-5 px-2 grow">
+			<div class="flex justify-center">
+				<form class="flex flex-col gap-2 w-full max-w-md group" hx-post="/" hx-swap="innerHTML" hx-target="#main-container">
+					@corecomponents.Input(corecomponents.InputProps{Name: "title", Placeholder: "Title", Attributes: templ.Attributes{"class": "hidden group-focus-within:block"}})
+					@corecomponents.TextArea(corecomponents.TextAreaProps{Name: "description", Placeholder: "Enter a todo", Rows: 1})
+					@corecomponents.Button(corecomponents.ButtonProps{Label: "Create", Variant: "filled", Attributes: templ.Attributes{"class": "hidden group-focus-within:block"}})
+				</form>
+			</div>
+			<div class="columns-3xs gap-2 space-y-2">
+				for _, todo := range props.Todos {
+					@TodoPartial(todo)
+				}
+			</div>
+			<div id="modal-container">
+				@UpdateTodoModal(props.Todo, props.IsUpdateModalVisible)
+				@DeleteTodoModal(props.Todo, props.IsDeleteModalVisible)
+			</div>
 		</div>
 	</div>
 }

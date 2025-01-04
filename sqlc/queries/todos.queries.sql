@@ -4,6 +4,9 @@ SELECT * FROM todos ORDER BY created_at DESC;
 -- name: ListOpenTodos :many
 SELECT * FROM todos WHERE is_completed = FALSE ORDER BY created_at DESC;
 
+-- name: ListCompletedTodos :many
+SELECT * FROM todos WHERE is_completed = TRUE ORDER BY created_at DESC;
+
 -- name: GetTodoById :one
 SELECT * FROM todos WHERE id = $1 LIMIT 1;
 
